@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Cg32KlSLMA4=",
+  "dgSpecHash": "NK65cdpjqf0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\Conduit\\Conduit.csproj",
+  "projectFilePath": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\Khmer-festivals\\Conduit.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\vien1\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\vien1\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",

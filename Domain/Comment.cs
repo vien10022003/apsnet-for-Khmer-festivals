@@ -10,7 +10,7 @@ public class Comment
 
     public string? Body { get; init; }
 
-    public Person? Author { get; init; }
+    public string? Author { get; init; }
 
     [JsonIgnore]
     public int AuthorId { get; init; }

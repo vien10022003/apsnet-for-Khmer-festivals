@@ -8,8 +8,8 @@ public static class ArticleExtensions
 {
     public static IQueryable<Article> GetAllData(this DbSet<Article> articles) =>
         articles
-            .Include(x => x.Author)
             .Include(x => x.ArticleFavorites)
             .Include(x => x.ArticleTags)
+            .Include(x => x.Comments)
             .AsNoTracking();
 }

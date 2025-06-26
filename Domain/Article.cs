@@ -19,6 +19,12 @@ public class Article
 
     public string? Body { get; set; }
 
+    public string[]? Image { get; set; }
+
+    public string? VideoUrl { get; set; }
+
+    public string? MapLocation { get; set; }
+
     public Person? Author { get; init; }
 
     public List<Comment> Comments { get; init; } = new();
@@ -31,7 +37,7 @@ public class Article
 
     [NotMapped]
     public List<string> TagList =>
-        ArticleTags.Where(x => x.TagId is not null).Select(x => x.TagId!).ToList();
+        [.. ArticleTags.Where(x => x.TagId is not null).Select(x => x.TagId!)];
 
     [JsonIgnore]
     public List<ArticleTag> ArticleTags { get; init; } = new();

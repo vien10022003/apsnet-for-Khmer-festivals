@@ -13,7 +13,7 @@ namespace Conduit.Features.Comments;
 
 public class Create
 {
-    public record CommentData(string? Body);
+    public record CommentData(string? Body, string? Author);
 
     public record Command(Model Model, string Slug) : IRequest<CommentEnvelope>;
 
@@ -44,20 +44,28 @@ public class Create
                 );
             }
             //abcxyz
-            // Lấy thông tin author nếu có JWT token, nếu không thì để null
-            Person? author = null;
+            // Ưu tiên sử dụng username từ JWT nếu có, nếu không thì dùng author từ tham số
+            string? authorUsername = null;
             var currentUsername = currentUserAccessor.GetCurrentUsername();
+            
             if (!string.IsNullOrEmpty(currentUsername))
             {
-                author = await context.Persons.FirstOrDefaultAsync(
+                // Nếu có JWT token, sử dụng username từ JWT
+                var author = await context.Persons.FirstOrDefaultAsync(
                     x => x.Username == currentUsername,
                     cancellationToken
                 );
+                authorUsername = author?.Username;
+            }
+            else
+            {
+                // Nếu không có JWT token, sử dụng author từ tham số API
+                authorUsername = message.Model.Comment.Author;
             }
 
             var comment = new Comment
             {
-                Author = author,
+                Author = authorUsername,
                 Body = message.Model.Comment.Body ?? string.Empty,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow

@@ -22,6 +22,12 @@ public class Create
         public string? Body { get; init; }
 
         public string[]? TagList { get; init; }
+
+        public string[]? Image { get; init; }
+
+        public string? VideoUrl { get; init; }
+
+        public string? MapLocation { get; init; }
     }
 
     public class ArticleDataValidator : AbstractValidator<ArticleData>
@@ -76,7 +82,10 @@ public class Create
                 UpdatedAt = DateTime.UtcNow,
                 Description = message.Article.Description,
                 Title = message.Article.Title,
-                Slug = message.Article.Title.GenerateSlug()
+                Slug = message.Article.Title.GenerateSlug(),
+                Image = message.Article.Image,
+                VideoUrl = message.Article.VideoUrl,
+                MapLocation = message.Article.MapLocation
             };
             await context.Articles.AddAsync(article, cancellationToken);
 

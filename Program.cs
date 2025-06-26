@@ -5,7 +5,9 @@ using Conduit;
 using Conduit.Domain;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
+using Conduit.Infrastructure.Security;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -81,7 +83,7 @@ builder.Services.AddSwaggerGen(x =>
             }
         }
     );
-    x.SwaggerDoc("v1", new OpenApiInfo { Title = "RealWorld API", Version = "v1" });
+    x.SwaggerDoc("v1", new OpenApiInfo { Title = "Festival API", Version = "v1" });
     x.CustomSchemaIds(y => y.FullName);
     x.DocInclusionPredicate((_, _) => true);
     x.TagActionsBy(y => new List<string> { y.GroupName ?? throw new InvalidOperationException() });
@@ -124,7 +126,7 @@ app.UseMvc();
 app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
 
 // Enable middleware to serve swagger-ui assets(HTML, JS, CSS etc.)
-app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1"));
+app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "Festival API V1"));
 
 using (var scope = app.Services.CreateScope())
 {
@@ -146,26 +148,34 @@ static async Task SeedDatabase(ConduitContext context)
         return;
     }
 
-    // Seed Users
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
+    using IPasswordHasher hasher = new PasswordHasher();
+#pragma warning restore CA1859 // Use concrete types when possible for improved performance
+
+    // Seed Users - Password: "admin123" and "test123"
     var admin = new Person
     {
         Username = "admin",
-        Email = "admin@realworld.com",
-        Bio = "Administrator of RealWorld",
-        Image = "https://via.placeholder.com/150",
-        Hash = System.Text.Encoding.UTF8.GetBytes("AQAAAAEAACcQAAAAEFtpJR7Z3K7HcE7K5o8sNrJGHtUfHKlvQrKRkM7eZj8J6P3n4TFd9ZmGkEr6L1xCqA=="),
-        Salt = System.Text.Encoding.UTF8.GetBytes("salt123")
+        Email = "admin@festival.com",
+        Bio = "Administrator of Festival",
+        Image = "https://via.placeholder.com/150"
     };
+    var salt1 = Guid.NewGuid().ToByteArray();
+    var adminPassword = await hasher.Hash("123456", salt1);
+    admin.Hash = adminPassword;
+    admin.Salt = salt1;
 
     var testUser = new Person
     {
         Username = "testuser",
-        Email = "test@realworld.com",
-        Bio = "Test user for RealWorld",
-        Image = "https://via.placeholder.com/150",
-        Hash = System.Text.Encoding.UTF8.GetBytes("AQAAAAEAACcQAAAAEFtpJR7Z3K7HcE7K5o8sNrJGHtUfHKlvQrKRkM7eZj8J6P3n4TFd9ZmGkEr6L1xCqA=="),
-        Salt = System.Text.Encoding.UTF8.GetBytes("salt456")
+        Email = "test@festival.com",
+        Bio = "Test user for Festival",
+        Image = "https://via.placeholder.com/150"
     };
+    var salt2 = Guid.NewGuid().ToByteArray();
+    var testPassword = await hasher.Hash("123456", salt2);
+    testUser.Hash = testPassword;
+    testUser.Salt = salt2;
 
     context.Persons.AddRange(admin, testUser);
     await context.SaveChangesAsync();
@@ -185,10 +195,10 @@ static async Task SeedDatabase(ConduitContext context)
     // Seed Articles
     var article1 = new Article
     {
-        Title = "Welcome to RealWorld",
-        Description = "Getting started with RealWorld application",
-        Body = "This is the first article in our RealWorld application. Learn how to create amazing content!",
-        Slug = "welcome-to-realworld",
+        Title = "Welcome to Festival",
+        Description = "Getting started with Festival application",
+        Body = "This is the first article in our Festival application. Learn how to create amazing content!",
+        Slug = "welcome-to-festival",
         Author = admin,
         CreatedAt = DateTime.UtcNow.AddDays(-7),
         UpdatedAt = DateTime.UtcNow.AddDays(-7)
@@ -215,7 +225,7 @@ static async Task SeedDatabase(ConduitContext context)
         {
             Body = "Great article! Very helpful for beginners.",
             Article = article1,
-            Author = testUser,
+            Author = "testUser",
             CreatedAt = DateTime.UtcNow.AddDays(-6),
             UpdatedAt = DateTime.UtcNow.AddDays(-6)
         },
@@ -223,7 +233,7 @@ static async Task SeedDatabase(ConduitContext context)
         {
             Body = "Thanks for sharing these best practices!",
             Article = article2,
-            Author = testUser,
+            Author = "testUser",
             CreatedAt = DateTime.UtcNow.AddDays(-4),
             UpdatedAt = DateTime.UtcNow.AddDays(-4)
         }

@@ -15,7 +15,15 @@ namespace Conduit.Features.Articles;
 
 public class Edit
 {
-    public record ArticleData(string? Title, string? Description, string? Body, string[]? TagList);
+    public record ArticleData(
+        string? Title,
+        string? Description,
+        string? Body,
+        string[]? TagList,
+        string[]? Image,
+        string? VideoUrl,
+        string? MapLocation
+    );
 
     public record Command(Model Model, string Slug) : IRequest<ArticleEnvelope>;
 
@@ -50,6 +58,9 @@ public class Edit
             article.Body = message.Model.Article.Body ?? article.Body;
             article.Title = message.Model.Article.Title ?? article.Title;
             article.Slug = article.Title.GenerateSlug();
+            article.Image = message.Model.Article.Image ?? article.Image;
+            article.VideoUrl = message.Model.Article.VideoUrl ?? article.VideoUrl;
+            article.MapLocation = message.Model.Article.MapLocation ?? article.MapLocation;
 
             // list of currently saved article tags for the given article
             var articleTagList = message.Model.Article.TagList ?? Enumerable.Empty<string>();
@@ -69,7 +80,7 @@ public class Edit
 
             // ensure context is tracking any tags that are about to be created so that it won't attempt to insert a duplicate
             context.Tags.AttachRange(
-                articleTagsToCreate.Where(x => x.Tag is not null).Select(a => a.Tag!).ToArray()
+                [.. articleTagsToCreate.Where(x => x.Tag is not null).Select(a => a.Tag!)]
             );
 
             // add the new article tags
