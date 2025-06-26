@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "iX/YMcI9oBo=",
+  "dgSpecHash": "Cg32KlSLMA4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\aspnetcore-realworld-example-app-master\\src\\Conduit\\Conduit.csproj",
+  "projectFilePath": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\Conduit\\Conduit.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\vien1\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\vien1\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",

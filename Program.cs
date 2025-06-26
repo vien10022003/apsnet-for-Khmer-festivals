@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Conduit;
+using Conduit.Domain;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
 using Microsoft.AspNetCore.Builder;
@@ -12,7 +14,7 @@ using Microsoft.OpenApi.Models;
 // read database configuration (database provider + database connection) from environment variables
 //Environment.GetEnvironmentVariable(DEFAULT_DATABASE_PROVIDER)
 //Environment.GetEnvironmentVariable(DEFAULT_DATABASE_CONNECTION_STRING)
-var defaultDatabaseConnectionSrting = "Filename=realworld.db";
+var defaultDatabaseConnectionSrting = "Filename=festival.db";
 var defaultDatabaseProvider = "sqlite";
 
 var builder = WebApplication.CreateBuilder(args);
@@ -126,9 +128,119 @@ app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld A
 
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope
-        .ServiceProvider.GetRequiredService<ConduitContext>()
-        .Database.EnsureCreated();
-    // use context
+    var dbContext = scope.ServiceProvider.GetRequiredService<ConduitContext>();
+    var created = dbContext.Database.EnsureCreated();
+    
+    // Seed data nếu database mới được tạo
+    if (created)
+    {
+        await SeedDatabase(dbContext);
+    }
+}
+
+static async Task SeedDatabase(ConduitContext context)
+{
+    // Kiểm tra xem đã có dữ liệu chưa
+    if (await context.Persons.AnyAsync())
+    {
+        return;
+    }
+
+    // Seed Users
+    var admin = new Person
+    {
+        Username = "admin",
+        Email = "admin@realworld.com",
+        Bio = "Administrator of RealWorld",
+        Image = "https://via.placeholder.com/150",
+        Hash = System.Text.Encoding.UTF8.GetBytes("AQAAAAEAACcQAAAAEFtpJR7Z3K7HcE7K5o8sNrJGHtUfHKlvQrKRkM7eZj8J6P3n4TFd9ZmGkEr6L1xCqA=="),
+        Salt = System.Text.Encoding.UTF8.GetBytes("salt123")
+    };
+
+    var testUser = new Person
+    {
+        Username = "testuser",
+        Email = "test@realworld.com",
+        Bio = "Test user for RealWorld",
+        Image = "https://via.placeholder.com/150",
+        Hash = System.Text.Encoding.UTF8.GetBytes("AQAAAAEAACcQAAAAEFtpJR7Z3K7HcE7K5o8sNrJGHtUfHKlvQrKRkM7eZj8J6P3n4TFd9ZmGkEr6L1xCqA=="),
+        Salt = System.Text.Encoding.UTF8.GetBytes("salt456")
+    };
+
+    context.Persons.AddRange(admin, testUser);
+    await context.SaveChangesAsync();
+
+    // Seed Tags
+    var tags = new[]
+    {
+        new Tag { TagId = "technology" },
+        new Tag { TagId = "programming" },
+        new Tag { TagId = "aspnet" },
+        new Tag { TagId = "csharp" },
+        new Tag { TagId = "webdev" }
+    };
+    context.Tags.AddRange(tags);
+    await context.SaveChangesAsync();
+
+    // Seed Articles
+    var article1 = new Article
+    {
+        Title = "Welcome to RealWorld",
+        Description = "Getting started with RealWorld application",
+        Body = "This is the first article in our RealWorld application. Learn how to create amazing content!",
+        Slug = "welcome-to-realworld",
+        Author = admin,
+        CreatedAt = DateTime.UtcNow.AddDays(-7),
+        UpdatedAt = DateTime.UtcNow.AddDays(-7)
+    };
+
+    var article2 = new Article
+    {
+        Title = "ASP.NET Core Best Practices",
+        Description = "Learn the best practices for ASP.NET Core development",
+        Body = "In this article, we'll explore the best practices for developing applications with ASP.NET Core.",
+        Slug = "aspnet-core-best-practices",
+        Author = admin,
+        CreatedAt = DateTime.UtcNow.AddDays(-5),
+        UpdatedAt = DateTime.UtcNow.AddDays(-5)
+    };
+
+    context.Articles.AddRange(article1, article2);
+    await context.SaveChangesAsync();
+
+    // Seed Comments
+    var comments = new[]
+    {
+        new Comment
+        {
+            Body = "Great article! Very helpful for beginners.",
+            Article = article1,
+            Author = testUser,
+            CreatedAt = DateTime.UtcNow.AddDays(-6),
+            UpdatedAt = DateTime.UtcNow.AddDays(-6)
+        },
+        new Comment
+        {
+            Body = "Thanks for sharing these best practices!",
+            Article = article2,
+            Author = testUser,
+            CreatedAt = DateTime.UtcNow.AddDays(-4),
+            UpdatedAt = DateTime.UtcNow.AddDays(-4)
+        }
+    };
+    context.Comments.AddRange(comments);
+    await context.SaveChangesAsync();
+
+    // Seed Article Tags
+    var articleTags = new[]
+    {
+        new ArticleTag { Article = article1, Tag = tags[0] }, // technology
+        new ArticleTag { Article = article1, Tag = tags[4] }, // webdev
+        new ArticleTag { Article = article2, Tag = tags[1] }, // programming
+        new ArticleTag { Article = article2, Tag = tags[2] }, // aspnet
+        new ArticleTag { Article = article2, Tag = tags[3] }  // csharp
+    };
+    context.ArticleTags.AddRange(articleTags);
+    await context.SaveChangesAsync();
 }
 app.Run();

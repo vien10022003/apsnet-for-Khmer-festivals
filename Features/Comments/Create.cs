@@ -43,11 +43,17 @@ public class Create
                     new { Article = Constants.NOT_FOUND }
                 );
             }
-
-            var author = await context.Persons.FirstAsync(
-                x => x.Username == currentUserAccessor.GetCurrentUsername(),
-                cancellationToken
-            );
+            //abcxyz
+            // Lấy thông tin author nếu có JWT token, nếu không thì để null
+            Person? author = null;
+            var currentUsername = currentUserAccessor.GetCurrentUsername();
+            if (!string.IsNullOrEmpty(currentUsername))
+            {
+                author = await context.Persons.FirstOrDefaultAsync(
+                    x => x.Username == currentUsername,
+                    cancellationToken
+                );
+            }
 
             var comment = new Comment
             {

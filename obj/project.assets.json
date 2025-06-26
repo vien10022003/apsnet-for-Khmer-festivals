@@ -3690,15 +3690,15 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\aspnetcore-realworld-example-app-master\\src\\Conduit\\Conduit.csproj",
+      "projectUniqueName": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\Conduit\\Conduit.csproj",
       "projectName": "Conduit",
-      "projectPath": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\aspnetcore-realworld-example-app-master\\src\\Conduit\\Conduit.csproj",
+      "projectPath": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\Conduit\\Conduit.csproj",
       "packagesPath": "C:\\Users\\vien1\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\aspnetcore-realworld-example-app-master\\src\\Conduit\\obj\\",
+      "outputPath": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\Conduit\\obj\\",
       "projectStyle": "PackageReference",
       "centralPackageVersionsManagementEnabled": true,
       "configFilePaths": [
-        "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\aspnetcore-realworld-example-app-master\\NuGet.Config",
+        "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\Conduit\\NuGet.Config",
         "C:\\Users\\vien1\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
@@ -3714,6 +3714,7 @@
         }
       },
       "warningProperties": {
+        "allWarningsAsErrors": true,
         "warnAsError": [
           "NU1605"
         ]

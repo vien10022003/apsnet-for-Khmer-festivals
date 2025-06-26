@@ -11,7 +11,6 @@ namespace Conduit.Features.Comments;
 public class CommentsController(IMediator mediator) : Controller
 {
     [HttpPost("{slug}/comments")]
-    [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
     public Task<CommentEnvelope> Create(
         string slug,
         [FromBody] Create.Model model,
