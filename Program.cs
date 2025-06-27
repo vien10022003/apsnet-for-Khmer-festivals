@@ -225,7 +225,8 @@ static async Task SeedDatabase(ConduitContext context)
         Slug = "welcome-to-festival",
         Author = admin,
         CreatedAt = DateTime.UtcNow.AddDays(-7),
-        UpdatedAt = DateTime.UtcNow.AddDays(-7)
+        UpdatedAt = DateTime.UtcNow.AddDays(-7),
+        Views = 156
     };
 
     var article2 = new Article
@@ -236,7 +237,8 @@ static async Task SeedDatabase(ConduitContext context)
         Slug = "aspnet-core-best-practices",
         Author = admin,
         CreatedAt = DateTime.UtcNow.AddDays(-5),
-        UpdatedAt = DateTime.UtcNow.AddDays(-5)
+        UpdatedAt = DateTime.UtcNow.AddDays(-5),
+        Views = 89
     };
 
     context.Articles.AddRange(article1, article2);

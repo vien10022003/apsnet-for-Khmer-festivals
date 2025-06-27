@@ -57,4 +57,8 @@ public class ArticlesController(IMediator mediator) : Controller
     [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
     public Task Delete(string slug, CancellationToken cancellationToken) =>
         mediator.Send(new Delete.Command(slug), cancellationToken);
+
+    [HttpPost("{slug}/view")]
+    public Task IncrementView(string slug, CancellationToken cancellationToken) =>
+        mediator.Send(new IncrementView.Command(slug), cancellationToken);
 }

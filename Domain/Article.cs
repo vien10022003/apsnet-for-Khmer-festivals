@@ -25,6 +25,8 @@ public class Article
 
     public string? MapLocation { get; set; }
 
+    public int Views { get; set; } = 0;
+
     public Person? Author { get; init; }
 
     public List<Comment> Comments { get; init; } = new();
