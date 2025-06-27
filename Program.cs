@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Conduit;
 using Conduit.Domain;
@@ -7,7 +8,9 @@ using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
 using Conduit.Infrastructure.Security;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Server.IIS;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -91,6 +94,19 @@ builder.Services.AddSwaggerGen(x =>
 });
 
 builder.Services.AddCors();
+
+// Cấu hình cho file upload
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 100 * 1024 * 1024; // 100MB
+    options.ValueLengthLimit = 100 * 1024 * 1024; // 100MB
+    options.MemoryBufferThreshold = 100 * 1024 * 1024; // 100MB
+});
+
+// Cấu hình Kestrel để nhận file lớn
+builder.Services.Configure<Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerOptions>(options =>
+    options.Limits.MaxRequestBodySize = 100 * 1024 * 1024); // 100MB
+
 builder
     .Services.AddMvc(opt =>
     {
@@ -118,6 +134,14 @@ app.Services.GetRequiredService<ILoggerFactory>().AddSerilogLogging();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
+// Serve static files từ thư mục images
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "images")),
+    RequestPath = "/images"
+});
 
 app.UseAuthentication();
 app.UseMvc();
