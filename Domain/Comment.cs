@@ -12,6 +12,8 @@ public class Comment
 
     public string? Author { get; init; }
 
+    public int Rate { get; init; }
+
     [JsonIgnore]
     public int AuthorId { get; init; }
 

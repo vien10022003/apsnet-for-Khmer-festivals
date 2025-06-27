@@ -66,9 +66,9 @@ public class JwtIssuerOptions
     public DateTime IssuedAt => DateTime.UtcNow;
 
     /// <summary>
-    /// Set the timespan the token will be valid for (default is 5 min/300 seconds)
+    /// Set the timespan the token will be valid for (default is 1 week/604800 seconds)
     /// </summary>
-    public TimeSpan ValidFor { get; set; } = TimeSpan.FromMinutes(5);
+    public TimeSpan ValidFor { get; set; } = TimeSpan.FromDays(7);
 
     /// <summary>
     /// "exp" (Expiration Time) Claim (returns IssuedAt + ValidFor)

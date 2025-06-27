@@ -13,7 +13,7 @@ namespace Conduit.Features.Comments;
 
 public class Create
 {
-    public record CommentData(string? Body, string? Author);
+    public record CommentData(string? Body, string? Author, int? Rate);
 
     public record Command(Model Model, string Slug) : IRequest<CommentEnvelope>;
 
@@ -67,6 +67,7 @@ public class Create
             {
                 Author = authorUsername,
                 Body = message.Model.Comment.Body ?? string.Empty,
+                Rate = message.Model.Comment.Rate ?? 0,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
