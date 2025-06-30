@@ -3685,26 +3685,33 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\vien1\\.nuget\\packages\\": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\Khmer-festivals\\Conduit.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\OneDrive - Hoc vien Ky thuat mat ma\\Desktop\\vien\\apsnet-for-Khmer-festivals\\Conduit.csproj",
       "projectName": "Conduit",
-      "projectPath": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\Khmer-festivals\\Conduit.csproj",
-      "packagesPath": "C:\\Users\\vien1\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\Khmer-festivals\\obj\\",
+      "projectPath": "C:\\Users\\Admin\\OneDrive - Hoc vien Ky thuat mat ma\\Desktop\\vien\\apsnet-for-Khmer-festivals\\Conduit.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Admin\\OneDrive - Hoc vien Ky thuat mat ma\\Desktop\\vien\\apsnet-for-Khmer-festivals\\obj\\",
       "projectStyle": "PackageReference",
       "centralPackageVersionsManagementEnabled": true,
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\vien1\\Downloads\\OceanTech\\School\\leHoiKemer\\Khmer-festivals\\NuGet.Config",
-        "C:\\Users\\vien1\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Admin\\OneDrive - Hoc vien Ky thuat mat ma\\Desktop\\vien\\apsnet-for-Khmer-festivals\\NuGet.Config",
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
