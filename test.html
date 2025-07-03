@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khmer Festivals ERD</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 28px;
+        }
+        
+        .erd-container {
+            position: relative;
+            width: 100%;
+            height: 1000px;
+            overflow: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        
+        .table {
+            position: absolute;
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px;
+            font-size: 12px;
+            z-index: 10;
+        }
+        
+        .table-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 6px 6px 0 0;
+            font-size: 14px;
+        }
+        
+        .table-body {
+            padding: 0;
+        }
+        
+        .field {
+            padding: 8px 12px;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .field:last-child {
+            border-bottom: none;
+        }
+        
+        .field:hover {
+            background: #f8f9fa;
+        }
+        
+        .pk {
+            background: #fff3cd;
+            font-weight: bold;
+            color: #856404;
+        }
+        
+        .fk {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .field-name {
+            flex: 1;
+        }
+        
+        .field-type {
+            font-size: 10px;
+            color: #6c757d;
+            margin-left: 8px;
+        }
+        
+        /* Repositioned tables to avoid overlap */
+        .person { top: 50px; left: 50px; }
+        .article { top: 50px; left: 350px; }
+        .comment { top: 450px; left: 350px; }
+        .tag { top: 50px; left: 800px; }
+        .followed-people { top: 350px; left: 50px; }
+        .article-favorite { top: 250px; left: 200px; }
+        .article-tag { top: 250px; left: 600px; }
+        
+        /* Arrow styles */
+        .arrow {
+            position: absolute;
+            z-index: 5;
+        }
+        
+        .arrow-line {
+            stroke: #e74c3c;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+        
+        .arrow-label {
+            position: absolute;
+            background: white;
+            padding: 2px 6px;
+            font-size: 10px;
+            color: #e74c3c;
+            font-weight: bold;
+            border: 1px solid #e74c3c;
+            border-radius: 4px;
+            z-index: 15;
+        }
+        
+        .legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            padding: 15px;
+            font-size: 12px;
+            z-index: 20;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 15px;
+            margin-right: 8px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ Khmer Festivals Database ERD</h1>
+        
+        <div class="erd-container">
+            <!-- SVG for arrows -->
+            <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; z-index: 5;">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                            refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#e74c3c" />
+                    </marker>
+                </defs>
+                
+                <!-- Person to Article (1:M Author) -->
+                <line x1="250" y1="120" x2="350" y2="120" class="arrow-line" />
+                
+                <!-- Article to Comment (1:M) -->
+                <line x1="450" y1="380" x2="450" y2="450" class="arrow-line" />
+                
+                <!-- Person to Comment (1:M Author) -->
+                <line x1="250" y1="200" x2="320" y2="200" class="arrow-line" />
+                <line x1="320" y1="200" x2="320" y2="520" class="arrow-line" />
+                <line x1="320" y1="520" x2="350" y2="520" class="arrow-line" />
+                
+                <!-- Person to FollowedPeople (M:M Self) -->
+                <line x1="150" y1="280" x2="150" y2="350" class="arrow-line" />
+                
+                <!-- Person to ArticleFavorite (M:M) -->
+                <line x1="200" y1="180" x2="200" y2="280" class="arrow-line" />
+                
+                <!-- Article to ArticleFavorite (M:M) -->
+                <line x1="350" y1="200" x2="300" y2="200" class="arrow-line" />
+                <line x1="300" y1="200" x2="300" y2="280" class="arrow-line" />
+                
+                <!-- Article to ArticleTag (M:M) -->
+                <line x1="550" y1="180" x2="600" y2="180" class="arrow-line" />
+                <line x1="600" y1="180" x2="600" y2="250" class="arrow-line" />
+                
+                <!-- Tag to ArticleTag (M:M) -->
+                <line x1="800" y1="120" x2="700" y2="120" class="arrow-line" />
+                <line x1="700" y1="120" x2="700" y2="280" class="arrow-line" />
+            </svg>
+            
+            <!-- Person Table -->
+            <div class="table person">
+                <div class="table-header">👤 Person</div>
+                <div class="table-body">
+                    <div class="field pk">
+                        <span class="field-name">PersonId</span>
+                        <span class="field-type">PK</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Username</span>
+                        <span class="field-type">string</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Email</span>
+                        <span class="field-type">string</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Bio</span>
+                        <span class="field-type">string</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Image</span>
+                        <span class="field-type">string</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Hash</span>
+                        <span class="field-type">byte[]</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Salt</span>
+                        <span class="field-type">byte[]</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Article Table -->
+            <div class="table article">
+                <div class="table-header">📰 Article</div>
+                <div class="table-body">
+                    <div class="field pk">
+                        <span class="field-name">ArticleId</span>
+                        <span class="field-type">PK</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Slug</span>
+                        <span class="field-type">string</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Title</span>
+                        <span class="field-type">string</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Description</span>
+                        <span class="field-type">string</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Body</span>
+                        <span class="field-type">string</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Image</span>
+                        <span class="field-type">string[]</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">VideoUrl</span>
+                        <span class="field-type">string</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">MapLocation</span>
+                        <span class="field-type">string</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Views</span>
+                        <span class="field-type">int</span>
+                    </div>
+                    <div class="field fk">
+                        <span class="field-name">Author</span>
+                        <span class="field-type">FK</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">CreatedAt</span>
+                        <span class="field-type">DateTime</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">UpdatedAt</span>
+                        <span class="field-type">DateTime</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Comment Table -->
+            <div class="table comment">
+                <div class="table-header">💬 Comment</div>
+                <div class="table-body">
+                    <div class="field pk">
+                        <span class="field-name">CommentId</span>
+                        <span class="field-type">PK</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Body</span>
+                        <span class="field-type">string</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Author</span>
+                        <span class="field-type">string</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">Rate</span>
+                        <span class="field-type">int</span>
+                    </div>
+                    <div class="field fk">
+                        <span class="field-name">AuthorId</span>
+                        <span class="field-type">FK</span>
+                    </div>
+                    <div class="field fk">
+                        <span class="field-name">ArticleId</span>
+                        <span class="field-type">FK</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">CreatedAt</span>
+                        <span class="field-type">DateTime</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">UpdatedAt</span>
+                        <span class="field-type">DateTime</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tag Table -->
+            <div class="table tag">
+                <div class="table-header">🏷️ Tag</div>
+                <div class="table-body">
+                    <div class="field pk">
+                        <span class="field-name">TagId</span>
+                        <span class="field-type">PK</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FollowedPeople Table -->
+            <div class="table followed-people">
+                <div class="table-header">👥 FollowedPeople</div>
+                <div class="table-body">
+                    <div class="field fk">
+                        <span class="field-name">ObserverId</span>
+                        <span class="field-type">FK</span>
+                    </div>
+                    <div class="field fk">
+                        <span class="field-name">TargetId</span>
+                        <span class="field-type">FK</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ArticleFavorite Table -->
+            <div class="table article-favorite">
+                <div class="table-header">❤️ ArticleFavorite</div>
+                <div class="table-body">
+                    <div class="field fk">
+                        <span class="field-name">ArticleId</span>
+                        <span class="field-type">FK</span>
+                    </div>
+                    <div class="field fk">
+                        <span class="field-name">PersonId</span>
+                        <span class="field-type">FK</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ArticleTag Table -->
+            <div class="table article-tag">
+                <div class="table-header">🔗 ArticleTag</div>
+                <div class="table-body">
+                    <div class="field fk">
+                        <span class="field-name">ArticleId</span>
+                        <span class="field-type">FK</span>
+                    </div>
+                    <div class="field fk">
+                        <span class="field-name">TagId</span>
+                        <span class="field-type">FK</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Relationship Labels -->
+            <div class="arrow-label" style="top: 115px; left: 290px;">1:M Author</div>
+            <div class="arrow-label" style="top: 415px; left: 455px;">1:M</div>
+            <div class="arrow-label" style="top: 515px; left: 325px;">1:M Author</div>
+            <div class="arrow-label" style="top: 315px; left: 155px;">M:M Self</div>
+            <div class="arrow-label" style="top: 230px; left: 205px;">M:M Favorite</div>
+            <div class="arrow-label" style="top: 215px; left: 605px;">M:M Tags</div>
+            
+            <!-- Legend -->
+            <div class="legend">
+                <h4 style="margin-top: 0;">Legend</h4>
+                <div class="legend-item">
+                    <div class="legend-color pk"></div>
+                    <span>Primary Key</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color fk"></div>
+                    <span>Foreign Key</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e74c3c;"></div>
+                    <span>Relationship</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
